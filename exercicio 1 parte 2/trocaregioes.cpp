@@ -18,28 +18,27 @@ using namespace cv;
 int main(int, char**){
   Mat image[5],aux;
   Vec3b val;
-  int breakx,breaky;
-  int randArray[4] = {1,2,3,4};  
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  int breakx,breaky; // coordenadas x e y do ponto central da imagem
+  int randArray[4] = {1,2,3,4}; // a imagem sera cortada em quatro partes e 
+ 				// e redistribuida de acordo com a ordem do numeros presentes
+				// no array randArray, o qual tera seus elementos embaralhados 
+				// pela funcao shuffle, logo abaixo. 
+  
   shuffle(&randArray[0],&randArray[4],default_random_engine(seed));
   
-  image[0]= imread("lena.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+  image[0]= imread("lena.jpg",CV_LOAD_IMAGE_GRAYSCALE); // le a imagem de entrada
+  aux = imread("lena.jpg",CV_LOAD_IMAGE_GRAYSCALE);
   breakx = image[0].rows/2;
   breaky = image[0].cols/2;
 
+// a imagem é então quebrada em 4 quadrantes
 image[1] = image[0](Rect(0,0,breakx,breaky)); // quadrante noroeste 
 image[2] = image[0](Rect(breakx,0,breakx,breaky)); // quadrante nordeste 
 image[3] = image[0](Rect(0,breakx,breakx,breaky)); // quadrante sudoeste 
 image[4] = image[0](Rect(breakx,breaky,breakx,breaky)); // quadrante  sudeste
 
-aux = imread("lena.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-
-for  (int i = 0  ; i < 4 ; i++){
-cout << image[i].rows << endl;
-cout << image[i].cols << endl;
-cout << randArray[i] << endl;
-cout << ""<< endl;
-}
+// reescrita da imagem gravada na variavel aux, de acordo com os valores de grayscale presentes em cada quadrante
  
 for  ( int i = 0; i < breakx ; i ++ ){
 	for ( int j = 0 ; j < breaky; j++) {
@@ -63,7 +62,7 @@ for  ( int i = 0; i < breakx ; i ++ ){
 	}
 }
 
-  imshow("janela", aux);  
+  imshow("janela", aux);  // mostra o resultado do embaralhamento da imagem original
   waitKey();
   return 0;
 }
